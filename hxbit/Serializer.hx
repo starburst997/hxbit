@@ -130,7 +130,17 @@ class Serializer {
 	}
 
 	public function end() {
+		#if js
+		// For some reason, JS saves a bunch of zero at the end
 		var bytes = out.getBytes();
+		
+		var finalBytes = haxe.io.Bytes.alloc(out.length);
+		finalBytes.blit(0, bytes, 0, out.length);
+		var bytes = finalBytes;
+		#else
+		var bytes = out.getBytes();
+		#end
+
 		out = null;
 		refs = null;
 		knownStructs = null;
